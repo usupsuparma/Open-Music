@@ -1,5 +1,6 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
@@ -79,8 +80,8 @@ class PlaylistsService {
     if (!result.rows.length) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
-    const note = result.rows[0];
-    if (note.owner !== owner) {
+    const playlist = result.rows[0];
+    if (playlist.owner !== owner) {
       throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
     }
   }
@@ -89,17 +90,18 @@ class PlaylistsService {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
-      if (error instanceof NotFoundError) {
+      if (error instanceof NotFoundError || error instanceof AuthorizationError) {
+        console.log('error');
         throw error;
       }
     }
 
     // eslint-disable-next-line no-useless-catch
-    try {
-      await this._collaborationService.verifyCollaborator(playlistId, userId);
-    } catch (error) {
-      throw error;
-    }
+    // try {
+    //   await this._collaborationService.verifyCollaborator(playlistId, userId);
+    // } catch (error) {
+    //   throw error;
+    // }
   }
 }
 
