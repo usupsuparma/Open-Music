@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const AuthenticationError = require('../../exceptions/AuthenticationError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
