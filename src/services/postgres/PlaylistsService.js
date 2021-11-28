@@ -61,13 +61,13 @@ class PlaylistsService {
 
   async deletePlaylist(playlistId, userId) {
     const query = {
-      text: 'DELETE FROM  playlists WHERE playlist_id = $1 AND user_id = $2 RETURNING ID',
+      text: 'DELETE FROM  playlists WHERE id = $1 AND owner = $2 RETURNING ID',
       values: [playlistId, userId],
     };
 
     const result = await this._pool.query(query);
     if (!result.rows.length) {
-      throw new InvariantError('Playlist gagal dihapus');
+      throw new AuthorizationError('Playlist gagal dihapus');
     }
   }
 

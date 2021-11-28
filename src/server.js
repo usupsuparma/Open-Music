@@ -128,16 +128,18 @@ const init = async () => {
   server.ext('onPreResponse', (request, h) => {
     // mendapatkan konteks response dari request
     const { response } = request;
-    console.log(response);
-    if (response instanceof ClientError) {
-      // membuat response baru dari response toolkit sesuai kebutuhan error handling
-      console.log('error handling');
-      const newResponse = h.response({
-        status: 'fail',
-        message: response.message,
-      });
-      newResponse.code(response.statusCode);
-      return newResponse;
+    if (response instanceof Error) {
+      console.log(response);
+      if (response instanceof ClientError) {
+        // membuat response baru dari response toolkit sesuai kebutuhan error handling
+        console.log('error handling');
+        const newResponse = h.response({
+          status: 'fail',
+          message: response.message,
+        });
+        newResponse.code(response.statusCode);
+        return newResponse;
+      }
     }
 
     // jika bukan ClientError, lanjutkan dengan response sebelumnya (tanpa terintervensi)

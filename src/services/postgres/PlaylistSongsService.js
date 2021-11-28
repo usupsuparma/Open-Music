@@ -1,6 +1,7 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
+const { mapDBToModel } = require('../../utils');
 
 class PlaylistSongsService {
   constructor() {
@@ -23,27 +24,29 @@ class PlaylistSongsService {
     return result.rows[0].id;
   }
 
-  async getSongFromPlaylist(playlistId, userId) {
+  async getSongFromPlaylist(playlistId) {
     const query = {
-      text: `SELECT songs.* FROM songs
-      LEFT JOIN playlistsongs ON playlistsongs.song_id = songs.id
-      LEFT JOIN users ON users.id = playlists.owner
-      WHERE playlists.owner = $1 OR collaborations.user_id = $1
-      GROUP BY playlists.id, users.id`,
-      values: [playlistId, userId],
+      text: `SELECT playlists.*, songs.* FROM playlists
+      LEFT JOIN playlistsongs ON playlistsongs.playlist_id = playlists.id
+      LEFT JOIN songs ON songs.id = playlistsongs.song_id
+      WHERE playlists.id = $1 
+      GROUP BY playlists.id, songs.id`,
+      values: [playlistId],
     };
 
     const result = await this._pool.query(query);
-    return result.rows;
+    return result.rows.map(mapDBToModel);
   }
 
-  async deleteCollaboration(playlistId, userId) {
+  async deleteSongFromPlaylistSong(playlistId, songId) {
+    console.log('delete song');
     const query = {
-      text: 'DELETE FROM  collaborations WHERE playlist_id = $1 AND song_id = $2 RETURNING ID',
-      values: [playlistId, userId],
+      text: 'DELETE FROM  playlistsongs WHERE playlist_id = $1 AND song_id = $2 RETURNING ID',
+      values: [playlistId, songId],
     };
 
     const result = await this._pool.query(query);
+    console.log(result.rows.length);
     if (!result.rows.length) {
       throw new InvariantError('Playlist song gagal dihapus');
     }

@@ -6,6 +6,8 @@ class PlaylistSongHandler {
     this._songService = songService;
 
     this.postSongsToPlaylistHandler = this.postSongsToPlaylistHandler.bind(this);
+    this.getSongsFromPlaylistHandler = this.getSongsFromPlaylistHandler.bind(this);
+    this.deleteSongsFromPlaylistHandler = this.deleteSongsFromPlaylistHandler.bind(this);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -29,6 +31,36 @@ class PlaylistSongHandler {
       data: null,
     });
     response.code(201);
+    return response;
+  }
+
+  async getSongsFromPlaylistHandler(request, h) {
+    console.log('test');
+    const { playlistId } = request.params;
+
+    const { id: credentialId } = request.auth.credentials;
+    await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
+    const songs = await this._service.getSongFromPlaylist(playlistId);
+
+    const response = h.response({
+      status: 'success',
+      data: { songs },
+    });
+    return response;
+  }
+
+  async deleteSongsFromPlaylistHandler(request, h) {
+    const { playlistId } = request.params;
+    const { songId } = request.payload;
+
+    const { id: credentialId } = request.auth.credentials;
+    await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
+    await this._service.deleteSongFromPlaylistSong(playlistId, songId);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Lagu berhasil dihapus dari playlist',
+    });
     return response;
   }
 }
