@@ -42,11 +42,10 @@ class PlaylistSongHandler {
     await this._playlistsService.verifyPlaylistAccess(playlistId, credentialId);
     const songs = await this._service.getSongFromPlaylist(playlistId);
 
-    const response = h.response({
+    return h.response({
       status: 'success',
       data: { songs },
     });
-    return response;
   }
 
   async deleteSongsFromPlaylistHandler(request, h) {

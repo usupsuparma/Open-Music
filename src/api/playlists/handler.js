@@ -14,7 +14,6 @@ class PlaylistsHandler {
   }
 
   async postPlaylistHandler(request, h) {
-    console.log('test');
     this._validator.validatePlaylistPayload(request.payload);
     const {
       name,
@@ -40,7 +39,6 @@ class PlaylistsHandler {
   async getPlaylistsHandler(request, h) {
     try {
       const { id: credentialId } = request.auth.credentials;
-      console.log(credentialId);
       const playlists = await this._service.getPlaylists(credentialId);
       return {
         status: 'success',

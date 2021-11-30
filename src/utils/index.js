@@ -16,7 +16,7 @@ const mapDBToModelDetail = ({
 });
 
 const mapDBToModelPlaylist = ({
-  id, name, owner, username,
+  id, name, username,
 }) => ({
   id,
   name,

@@ -9,7 +9,7 @@ class PlaylistSongsService {
   }
 
   async addSongToPlaylist(playlistId, songId) {
-    const id = `song-${nanoid(16)}`;
+    const id = `playlistsong-${nanoid(16)}`;
 
     const query = {
       text: 'INSERT INTO playlistsongs VALUES($1, $2, $3) RETURNING id',
@@ -49,18 +49,6 @@ class PlaylistSongsService {
     console.log(result.rows.length);
     if (!result.rows.length) {
       throw new InvariantError('Playlist song gagal dihapus');
-    }
-  }
-
-  async verifyPlaylistSong(playlistId, songId) {
-    const query = {
-      text: 'SELECT * FROM collaborations WHERE playlist_id = $1 AND song_id = $2',
-      values: [playlistId, songId],
-    };
-
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
-      throw new InvariantError('Playlist song gagal diverifikasi');
     }
   }
 }

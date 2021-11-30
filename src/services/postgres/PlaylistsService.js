@@ -58,6 +58,10 @@ class PlaylistsService {
     return result.rows.map(mapDBToModel)[0];
   }
 
+  async editPlaylistById(id, payload) {
+    console.log('test');
+  }
+
   async deletePlaylist(playlistId, userId) {
     const query = {
       text: 'DELETE FROM  playlists WHERE id = $1 AND owner = $2 RETURNING ID',
@@ -72,7 +76,7 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(id, owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1',
+      text: 'SELECT * FROM playlists WHERE id = $1 RETURNING owner',
       values: [id],
     };
     const result = await this._pool.query(query);
