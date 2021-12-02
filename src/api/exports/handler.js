@@ -13,7 +13,7 @@ class ExportHandler {
     console.log(`playlist id= ${playlistId}  userId: ${credentialId}`);
     this._validator.validateExportPlaylistPayload(request.payload);
 
-    this._playlistservice.verifyPlaylistAccess(playlistId, credentialId);
+    await this._playlistservice.verifyPlaylistAccess(playlistId, credentialId);
 
     const message = {
       playlistId,

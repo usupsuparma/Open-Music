@@ -76,10 +76,11 @@ class PlaylistsService {
 
   async verifyPlaylistOwner(id, owner) {
     const query = {
-      text: 'SELECT * FROM playlists WHERE id = $1 RETURNING owner',
+      text: 'SELECT * FROM playlists WHERE id = $1',
       values: [id],
     };
     const result = await this._pool.query(query);
+    console.log(result.rows);
     if (!result.rows.length) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
