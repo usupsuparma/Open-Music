@@ -28,10 +28,6 @@ class UsersService {
     return result.rows[0].id;
   }
 
-  async getUsersByUsername(username) {
-    console.log(username);
-  }
-
   async verifyNewUsername(username) {
     const query = {
       text: 'SELECT username FROM users WHERE username = $1',

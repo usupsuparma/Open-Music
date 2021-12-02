@@ -20,7 +20,7 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new InvariantError('Playlist gagal ditambahkan');
     }
 
@@ -51,7 +51,7 @@ class PlaylistsService {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
+    if (!result.rowCountgth) {
       throw new NotFoundError('Catatan tidak ditemukan');
     }
 
@@ -65,7 +65,7 @@ class PlaylistsService {
     };
 
     const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new AuthorizationError('Playlist gagal dihapus');
     }
   }
@@ -76,8 +76,7 @@ class PlaylistsService {
       values: [id],
     };
     const result = await this._pool.query(query);
-    console.log(result.rows);
-    if (!result.rows.length) {
+    if (!result.rowCount) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
     const playlist = result.rows[0];
@@ -91,7 +90,6 @@ class PlaylistsService {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
       if (error instanceof NotFoundError) {
-        console.log(error);
         throw error;
       }
       // eslint-disable-next-line no-useless-catch
