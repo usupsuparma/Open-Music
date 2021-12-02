@@ -4,8 +4,9 @@ const InvariantError = require('../../exceptions/InvariantError');
 const { mapDBToModel } = require('../../utils');
 
 class PlaylistSongsService {
-  constructor() {
+  constructor(cacheService) {
     this._pool = new Pool();
+    this._cacheService = cacheService;
   }
 
   async addSongToPlaylist(playlistId, songId) {
@@ -21,6 +22,7 @@ class PlaylistSongsService {
       throw new InvariantError('Lagu gagal ditambahkan');
     }
 
+    await this._cacheService.delete(`playlist-song:${playlistId}`);
     return result.rows[0].id;
   }
 
@@ -35,7 +37,9 @@ class PlaylistSongsService {
     };
 
     const result = await this._pool.query(query);
-    return result.rows.map(mapDBToModel);
+    const mappedResult = result.rows.map(mapDBToModel);
+    await this._cacheService.set(`playlist-song:${playlistId}`, JSON.stringify(mappedResult));
+    return mappedResult;
   }
 
   async deleteSongFromPlaylistSong(playlistId, songId) {
@@ -46,10 +50,12 @@ class PlaylistSongsService {
     };
 
     const result = await this._pool.query(query);
-    console.log(result.rows.length);
+
     if (!result.rows.length) {
       throw new InvariantError('Playlist song gagal dihapus');
     }
+
+    await this._cacheService.delete(`playlist-song:${playlistId}`);
   }
 }
 

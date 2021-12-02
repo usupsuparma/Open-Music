@@ -35,7 +35,6 @@ class PlaylistSongHandler {
   }
 
   async getSongsFromPlaylistHandler(request, h) {
-    console.log('test');
     const { playlistId } = request.params;
 
     const { id: credentialId } = request.auth.credentials;
