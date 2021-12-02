@@ -1,5 +1,3 @@
-const ClientError = require('../../exceptions/ClientError');
-
 class UploadImageHandler {
   constructor(service, validaor) {
     this._service = service;
