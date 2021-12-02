@@ -90,18 +90,17 @@ class PlaylistsService {
     try {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
-      if (error instanceof NotFoundError || error instanceof AuthorizationError) {
+      if (error instanceof NotFoundError) {
         console.log(error);
         throw error;
       }
+      // eslint-disable-next-line no-useless-catch
+      try {
+        await this._collaborationService.verifyCollaborator(playlistId, userId);
+      } catch (err) {
+        throw err;
+      }
     }
-
-    // eslint-disable-next-line no-useless-catch
-    // try {
-    //   await this._collaborationService.verifyCollaborator(playlistId, userId);
-    // } catch (error) {
-    //   throw error;
-    // }
   }
 }
 
