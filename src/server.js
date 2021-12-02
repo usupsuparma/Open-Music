@@ -165,10 +165,8 @@ const init = async () => {
     // mendapatkan konteks response dari request
     const { response } = request;
     if (response instanceof Error) {
-      console.log(response);
       if (response instanceof ClientError) {
         // membuat response baru dari response toolkit sesuai kebutuhan error handling
-        console.log('error handling');
         const newResponse = h.response({
           status: 'fail',
           message: response.message,

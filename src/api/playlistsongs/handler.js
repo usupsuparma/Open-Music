@@ -13,7 +13,6 @@ class PlaylistSongHandler {
   // eslint-disable-next-line class-methods-use-this
   async postSongsToPlaylistHandler(request, h) {
     const { playlistId } = request.params;
-    console.log(playlistId);
     // toDo validasi params
     this._validator.validatePlaylistSongPayload(request.payload);
     const { songId } = request.payload;

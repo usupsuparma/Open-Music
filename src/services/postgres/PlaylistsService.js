@@ -58,10 +58,6 @@ class PlaylistsService {
     return result.rows.map(mapDBToModel)[0];
   }
 
-  async editPlaylistById(id, payload) {
-    console.log('test');
-  }
-
   async deletePlaylist(playlistId, userId) {
     const query = {
       text: 'DELETE FROM  playlists WHERE id = $1 AND owner = $2 RETURNING ID',
@@ -80,6 +76,7 @@ class PlaylistsService {
       values: [id],
     };
     const result = await this._pool.query(query);
+    console.log(result.rows);
     if (!result.rows.length) {
       throw new NotFoundError('Playlist tidak ditemukan');
     }
@@ -94,7 +91,7 @@ class PlaylistsService {
       await this.verifyPlaylistOwner(playlistId, userId);
     } catch (error) {
       if (error instanceof NotFoundError || error instanceof AuthorizationError) {
-        console.log('error');
+        console.log(error);
         throw error;
       }
     }
